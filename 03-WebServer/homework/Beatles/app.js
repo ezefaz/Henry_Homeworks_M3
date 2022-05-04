@@ -22,3 +22,26 @@ var beatles=[{
   profilePic:"http://cp91279.biography.com/BIO_Bio-Shorts_0_Ringo-Starr_SF_HD_768x432-16x9.jpg"
 }
 ]
+
+http.createServer((req, res) => {
+  if(req.url === "/api") {
+    res.writeHead(200, {'content-type': 'application/json' })
+    res.end(JSON.stringify(beatles)) //stringify convierte un objeto en una cadena de texto json
+  }
+  if(req.url.substring(0, 5) === '/api' && req.url.length > 5) {//el substring toma una partecita de un string, por ejemplo en este caso nos esta tomando desde la posicion 0 hasta la 5.
+  let findBeatle = req.url.split('/').pop; // John%20Lennon
+  let foundBeatle = beatles.find((b) => findBeatle === encodeURI(b.name))  
+  if(foundBeatle) {
+    res.writeHead(200, {'content-type': 'application/json'})
+    res.end(JSON.stringify(foundBeattle))
+  } else {
+    res.writeHead(404, {'content-type': 'text/plain'})
+    res.end('No existe ese Beatle')
+    }
+  }
+  if(req === '/') {
+    res.writeHead(200, {'content-type': 'text/html'}) 
+    // const index = fs.readFileSync(`${_dirname}/index.html`) --> otra forma de hacerlo
+  }
+})
+.listen(3000, '127.0.0.1');
